@@ -9,7 +9,9 @@
 ##Configuring PgAdmin
 
 * From PgAdmin's menu, select **FILE | ADD SERVER**
-* Enter the server settings as illustrated ![here](https://raw.githubusercontent.com/srajeev1/607Project3/master/postgresql_info/pgadmin-psql.natame.png)
+* Enter the server settings as illustrated:
+
+![here](https://raw.githubusercontent.com/srajeev1/607Project3/master/postgresql_info/pgadmin-psql.natame.png)
 
 ##Importing Data into Psql
 
