@@ -7,7 +7,7 @@ nathan lim
 david stern
 param singh
 <<<<<<< Updated upstream
-shazia khan
+shazia khan.
 Sekhar Mekala(msekhar12)
 =======
 =======
