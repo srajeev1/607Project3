@@ -3,8 +3,7 @@
 
 /*Execute the following commands in AWARDS Database*/
 
-/*Copy the files Category.csv, Movie.csv, Academy_Awards_Temp.csv (produced by R_Code_To_Cleanup) 
-to the folder which is accessible to this code. Make sure that you give all permissions on the three files:
+/*Copy the following files to the folder which is accessible to this code. Make sure that you give all permissions on the three files:
 
 MOVIE.csv
 CATEGORY.csv
