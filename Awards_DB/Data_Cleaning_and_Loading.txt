@@ -1,0 +1,89 @@
+#Not yet complete. Will complete tomorrow
+
+#Reading the file
+ academy_awards_df <- read.csv("academy_awards.csv", header=TRUE,stringsAsFactors=F)
+ head(academy_awards_df,100)
+ 
+#The data must be cleaned, since the movie names and the nominees were interchanged for the following categories:
+#Actor -- Leading Role
+#Actress -- Leading Role 
+#Actor -- Supporting Role
+#Actress -- Supporting Role 
+#Animated Feature Film
+ 
+ #We also have some additional characters/text between () and {} in Year and Additional.Info variables
+ #The Won. variable must be renamed to Won, and the YES will be converted to 1 and NO to 0
+ 
+#We also have additional variables. Let us first delete these variables:
+ 
+ #Step1: Delete additional variables
+ 
+  academy_awards_df$X <-NULL
+  academy_awards_df$X.1 <-NULL
+  academy_awards_df$X.2 <-NULL
+  academy_awards_df$X.3 <-NULL
+  academy_awards_df$X.4 <-NULL
+  academy_awards_df$X.5 <-NULL
+ 
+ library(dplyr)
+ library(tidyr)
+ 
+ #Remove the text between () in Year column
+ 
+ academy_awards_df <- academy_awards_df %>%
+   separate(Year,into=c("Year","Junk"), sep="\\(")
+ 
+ academy_awards_df$Junk <- NULL
+ 
+ academy_awards_df <- academy_awards_df %>%
+    separate(Year,into=c("Year","Junk"), sep="\\ ")
+ 
+ academy_awards_df$Junk <- NULL
+ 
+ head(academy_awards_df)
+ 
+ 
+ #Removing the text between "{}" from Additional.Info variable
+ academy_awards_df$Additional.Info <- as.vector(substring(academy_awards_df$Additional.Info,1,
+   ifelse(regexpr("\\{",academy_awards_df$Additional.Info) == -1, nchar(academy_awards_df$Additional.Info),
+          (regexpr("\\{",academy_awards_df$Additional.Info) - 1))
+ )
+ )
+        
+ #Finding the movie name from Nominee and Additional.Info variables, since for some award categories the information was interchanged
+ academy_awards_df$Movie <- ifelse((academy_awards_df$Category == "Actor -- Leading Role" | academy_awards_df$Category == "Actor -- Supporting Role" | 
+           academy_awards_df$Category == "Actress -- Leading Role" | academy_awards_df$Category == "Actress -- Supporting Role" |
+           academy_awards_df$Category == "Animated Feature Film"), 
+        academy_awards_df$Additional.Info, academy_awards_df$Nominee
+        )
+
+ #Now that we have obtained the Movie name, let us delete the unnecessary variables
+ 
+ academy_awards_df$Additional.Info <- NULL
+ academy_awards_df$Nominee <- NULL
+ 
+ 
+ #Changing the Won. variable to Won, and replacing the YES with 1 and NO with 0
+ academy_awards_df$Won <- ifelse(academy_awards_df$Won. == "NO", 0, 1)
+ academy_awards_df$Won. <- NULL
+ 
+ head(academy_awards_df,100)
+ 
+ #Let us generate CSV files for loading into the RDBMS Tables:
+ # Creating the file for Category table:
+ 
+ unique(academy_awards_df$Category)
+ 
+ write.table(data.frame(unique(academy_awards_df$Category)),file="Category.csv",row.names=FALSE,col.names=FALSE,sep=",",quote=FALSE)
+ 
+ write.table(unique(data.frame(academy_awards_df$Movie,academy_awards_df$Year)) ,file="Movie.csv",row.names=FALSE,col.names=FALSE,sep=",",quote=FALSE)
+ 
+ #To load, use:
+ #delete from CATEGORY;
+ 
+ #COPY CATEGORY(CATEGORY_NAME) FROM 'C:\Users\Sekhar\Documents\CUNY\607 Assignments\Category.csv' with DELIMITER ',' CSV;
+   
+ 
+ #Yet to create the nominations file
+ 
+ 
