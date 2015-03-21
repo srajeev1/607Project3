@@ -8,3 +8,16 @@ download.file(urlfile, destfile = "sampleawardsdata.csv", method = "curl")
 
 # Read from the directory
 mydf <- read.csv("sampleawardsdata.csv")
+head(mydf)
+
+library(tidyr)
+library(dplyr)
+table(mydf$Category)
+
+#new table only with Best Picture and Film Editing and separate Year to "year", "ord"
+best <- rbind(mydf[grep("Film Editing",mydf$Category),], mydf[grep("Best Picture",mydf$Category),])
+new <- best%>%
+        separate(Year, c("year", "ord"), -7)
+new$year <- gsub(' *', '' , new$year)  #erase white spaces
+
+
