@@ -64,18 +64,16 @@ names(awards_re_modified) <- c("movie_id", "year",  "c1",  "c2",  "c3",  "c4",  
 #award_categories
 #awards_re_modified
 
+#The awards_re_modified data frame's each row contains Movie ID, Year, categories in which the movie nominated (the categories are indicated by c1, c2...c23)
+#If a category contains NA, then the movie is NOT nominated
+#If a category contains 0 then the movie is nominated, but did not win
+#If a category contains 1 then the movie is nominated and also won the award in that category.
 
 
 dim(awards_re_modified)
-#table(awards_re_modified[awards_re_modified$c16 == 0 &!is.na(awards_re_modified$c16),][,c("c12","c16")])
 
 prop.table(table(awards_re_modified[,c("c12","c16")],useNA=c("no")))
 prop.table(table(awards_re_modified[,c("c1","c16")],useNA=c("no")))
-#P(BM | XYZ...) = P(XYZ & BM)/P(XYZ)
+
 head(awards_re_modified,150)
 
-
-awards_re_modified[awards_re_modified$movie_id == 3,]
-
-awards_modified[awards_modified$movie_id == 3,]
-awards_modified
