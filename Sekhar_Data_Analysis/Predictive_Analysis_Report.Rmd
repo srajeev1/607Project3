@@ -1,0 +1,234 @@
+---
+title: "Project_3_Report"
+author: "Sekhar Mekala"
+date: "Monday, March 23, 2015"
+output: html_document
+---
+
+# Data Massaging
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+setwd("C:/Users/Sekhar/Documents/Github/Project_3_607_My_Work")
+awards_df <- read.csv("Awards_File.csv",stringsAsFactors=F)
+awards_modified <- awards_df[,c(1,3,4,6)]
+#head(awards_modified)
+```
+
+The awards_modified data frame has some movies, which are nominated for the same category more than once, and has also won for one of its nominations (see below example) 
+```{r}
+awards_modified[awards_modified$movie_id==1288,]
+```
+
+To fix the above problem, we have to group by movie_id, year, category_id, and max(won)
+such grouping of data will include just the winning nomination, if a film is nominated multiple times in the same category, and one of the nominations wins in that category.
+
+```{r}
+awards_modified <- awards_modified %>%
+  group_by(movie_id,year,category_id) %>%
+  summarise(won=max(won))
+```
+
+The above transformation has eliminated all the duplicate rows, where the same movie has been nominated in the same category more than once and one of them wins.
+It just includes the winning nomination. If none of the multiple nominations win, then only one of the nominations are included.
+
+The below command confirms that for the movie_id=1536, only the winning nomination is inluded
+```{r}
+awards_modified[awards_modified$movie_id==1288,]
+```
+
+Now the spread() function can be applied to awards_modified data frame.
+```{r}
+awards_re_modified <- spread((awards_modified),category_id,won)
+```
+The above command will produce another data frame called *awards_re_modified*, with the following columns:
+*movie_id* - Movie IDentifier
+*Year* - Year of award
+*1 to 23* - Award categories from 1 to 23
+Wherever a movie wins an award, the respective category will have 1, wherever a movie is nominated, then the corresponding category will have 0, and wherever the movie  is neither nominated nor wins, we will have NA
+
+```{r}
+head(awards_re_modified)
+```
+
+To get the category names (since the above dataframe contains the categories as numbers/codes), let us create a separate data frame *award_categories*:
+
+```{r}
+award_categories <- unique(data.frame(category_id=awards_df$category_id,category_name=awards_df$category_name))
+rownames(award_categories) <- NULL
+
+award_categories
+```
+
+Since the variables are not allowed to start with numeric values, let us rename the column names of the data frame awards_re_modified to character variables.
+For example, the variable name "1" represents the award category_ID 1. We will change this to c1, to represent category 1.
+
+```{r}
+names(awards_re_modified) <- c("movie_id", "year",  "c1",  "c2",  "c3",  "c4",  "c5", "c6",  "c7",  "c8",  "c9", "c10", "c11", "c12",
+                               "c13", "c14", "c15","c16", "c17", "c18", "c19", "c20", "c21", "c22", "c23")
+
+```
+
+So finally we have the following data frames to work/use for our analysis:
+*award_categories*
+*awards_re_modified*
+
+
+
+#Main Objectives
+The *Best Picture* category_id is *16* and *Film Editing* category_id is *12*. 
+We have to identify which categories can help us to predict if a film gets the best picture, and determine if film_editing has the maximum probability.
+
+Our specific objectives are:
+
+* Probability of getting Best Movie, given that the movie is nominated in a paricular award category?
+* Probability of getting Best Movie, given that the movie wins in a paricular award category?
+
+
+#Data Analysis
+Let us use conditional probability to determine the following:
+
+**Objective-1** Probability of getting Best Movie, given that the movie is nominated in a paricular award category?
+
+**Objective-1** Probability of getting Best Movie, given that the movie wins in a paricular award category?
+
+
+## Bayes formula to find conditional probability:
+The formula for conditional probability is given below:
+$$P(A|B) = P(B|A) . P(A)/P(B) = P(AB) / P(B)$$
+
+
+In other words .... we will use the following cormulas to satisfy the objectives of our analysis.
+For **Objective-1**:
+
+P(Best Movie | It is nominated in x category) = P(that the movie won the Best picture award and also nominated in x category) / P(that a movie is nominated in x category)
+
+For **Objective-2**:
+
+P(Best Movie | (It is nominated in x category and also wins award in x category)) = P(that the movie won the Best picture award and got nominated in x category and also wins award in x category) / P(that a movie is nominated in x category and also wins the award in x category)
+
+
+Let us create a **temp** datafame, and read all the awards information, dropping the movie_id and year. We will also move the c16 (Best picture) award category as the last variable in **temp** data frame. This will help us to iterate via the columns easily, using for loop construct of R:
+
+```{r}
+temp <- data.frame()
+temp <- data.frame(awards_re_modified[,3:25])
+temp$c0 <- temp$c16
+temp$c16 <- NULL
+names(temp)[23] <- "c16"
+
+#probability_if_nominated <- data.frame(norow=22,ncol=2)
+```
+
+Let us display some sample rows of temp:
+
+```{r}
+head(temp)
+```
+
+The **R** code to get the conditional probabilities of getting the best picture, given that the movie is nominated in a specific category is given below. 
+This code produces a data frame, with the following details:
+
+
+*Award_Category_ID
+
+*Award_Category_Name
+
+*Probability_Percent
+
+
+The third variable (Probability_Percent) represents the probability of getting best picture award if the movie is nominated in a specific award category.
+##R Code for Objective-1
+```{r}
+p <- vector(length=22)
+category_id <- vector(length=22)
+category_name <- vector(length=22)
+category_name <- NULL
+for(i in 1:22)
+{
+
+  x <- temp[,c(i,23)]
+  #Get the probability of getting a movie nominated in category i
+  #First get the number of movies, and then get the number of movies for which the category_i is 1 or 0
+  
+  category_nominated_count <- sum(!is.na(x[,1])) #if category_i is 0 or 1, then the movie is nominated
+  Exhaustive_movies_count <- nrow(x)
+  #Hence the probability of getting a movie nominated is ...
+  p_of_getting_nom_in_i <- (category_nominated_count / Exhaustive_movies_count)
+  
+  
+  #Now get the count of movies which won the best movie given that they were nominated in category_i
+  p_of_best_pic_and_get_nom_in_i <- (sum(!is.na((x[which(x[,2] == 1),])[1])) / nrow(x))
+      
+  #Now, the probability of getting best movie given that it is nominated in category_i
+   p[i] <- (p_of_best_pic_and_get_nom_in_i / p_of_getting_nom_in_i) 
+  category_id[i] <- as.numeric(substr(names(temp)[i],2,3))
+  category_name[i] <- as.vector(award_categories[award_categories$category_id==(category_id[i]),2])
+  
+  
+}
+
+prob_of_best_pic_given_cat_nom <- data.frame(Award_Category_ID=category_id,Award_Category_Name=category_name,Probability_Percent=(p*100))
+prob_of_best_pic_given_cat_nom 
+
+barplot(prob_of_best_pic_given_cat_nom$Probability_Percent,names.arg=prob_of_best_pic_given_cat_nom$Award_Category_ID, 
+        args.legend = prob_of_best_pic_given_cat_nom$Award_Category_Name)
+```
+
+
+The above display of the probabilities conclude that if a film is nominated in "Directing" category, then there is 19% probability of winning the Best Picture award. The "Directing" category is the best predictor for "Best Picture" award. The second best predictor is "Film Editing", which predicts that if a film is nominated for "Film Editing" category, then there is 17.7% probability that it wins "Best Picture" award. 
+
+
+Let us compute the probabilities of getting "Best Picture" award to a movie, given that the movie wins award in a specific category (*Objective_2*)
+
+
+The *R* code to get the conditional probabilities of getting the best picture, given that the movie wins in a specific category is given below. 
+This code produces a data frame, with the following details:
+
+
+*Award_Category_ID
+
+*Award_Category_Name
+
+*Probability_Percent
+
+The third variable (Probability_Percent) represents the probability of getting best picture award if the movie is wins in a specific award category.
+##R Code for Objective-2
+
+```{r}
+for(i in 1:22)
+{
+  
+  x <- temp[,c(i,23)]
+  #Get the number of times a movie won in cat_i
+  num_of_wins_in_cat_i <- sum(x[which(!is.na(x[,1])),1] == 1)
+  
+  #Get the number of times a movie got Best movie and also won cat_i
+  num_of_best_movies_given_cat_i_win <- sum(x[which(x[,2] == 1),1] == 1,na.rm=T)
+  
+  #Probability of winning Best pic, given a picture wins in cat_i
+  p[i] <- (num_of_best_movies_given_cat_i_win / num_of_wins_in_cat_i)
+  
+  category_id[i] <- as.numeric(substr(names(temp)[i],2,3))
+  category_name[i] <- as.vector(award_categories[award_categories$category_id==(category_id[i]),2])
+  
+}
+
+
+prob_of_best_pic_given_a_cat_wins <- data.frame(Award_Category_ID=category_id,Award_Category_Name=category_name,Probability_Percent=(p*100))
+prob_of_best_pic_given_a_cat_wins
+
+barplot(prob_of_best_pic_given_a_cat_wins$Probability_Percent,names.arg=prob_of_best_pic_given_a_cat_wins$Award_Category_ID, 
+        args.legend = prob_of_best_pic_given_a_cat_wins$Award_Category_Name)
+
+#barplot(prob_of_best_pic_given_cat_nom$Probability_Percent,names.arg=prob_of_best_pic_given_cat_nom$Award_Category_ID, 
+#        args.legend = prob_of_best_pic_given_cat_nom$Award_Category_Name)
+
+```
+
+The above display concludes that, if a movie wins the "Directing" award, then there is 71.8% probability that it also wins "Best Picture", and if a film wins "Film Editing" award, then there is 42.8% chance that it can also win "Best Film". Hence "Directing" category predicts the best picture with a maximum probability.
+
+#Final conclusion
+The "Driecting" award predicts the "Best Movie" award with maximum probability, and the second best predictor for "Best Film" is the "Film Editing" category
