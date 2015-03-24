@@ -3,7 +3,8 @@
 
 /*Execute the following commands in AWARDS Database*/
 
-/*Copy the following files to the folder which is accessible to this code. Make sure that you give all permissions on the three files:
+/*Copy the files Category.csv, Movie.csv, Academy_Awards_Temp.csv (produced by R_Code_To_Cleanup) 
+to the folder which is accessible to this code. Make sure that you give all permissions on the three files:
 
 MOVIE.csv
 CATEGORY.csv
@@ -51,11 +52,16 @@ COPY MOVIE(MOVIE_NAME, YEAR) FROM 'C:\Users\Sekhar\Documents\Github\Project_3_60
 COPY NOMINATIONS(MOVIE_ID, CATEGORY_ID,NOMINATION_NUMBER,WON) FROM 'C:\Users\Sekhar\Documents\Github\Project_3_607_My_Work\NOMINATIONS.csv' with DELIMITER ',' encoding 'LATIN1' CSV HEADER;
 
 SELECT * FROM CATEGORY;
-SELECT * FROM MOVIE;
+SELECT * FROM MOVIE where year = 2010 order by movie_name ;
 SELECT * FROM NOMINATIONS;
 
 
 /*Simple query to get the Movies, winners, nominees etc. */
+COPY (SELECT A.MOVIE_ID MOVIE_ID, A.MOVIE_NAME MOVIE_NAME, A.YEAR AS YEAR, B.CATEGORY_ID CATEGORY_ID,B.CATEGORY_NAME CATEGORY_NAME, C.WON WON
+FROM MOVIE A, CATEGORY B, NOMINATIONS C
+WHERE A.MOVIE_ID = C.MOVIE_ID AND B.CATEGORY_ID = C.CATEGORY_ID
+) TO 'C:\Users\Sekhar\Documents\Github\Project_3_607_My_Work\Awards_File.csv' WITH  CSV HEADER;
+
 SELECT A.MOVIE_ID, A.MOVIE_NAME, A.YEAR, B.CATEGORY_ID,B.CATEGORY_NAME, C.WON
 FROM MOVIE A, CATEGORY B, NOMINATIONS C
 WHERE A.MOVIE_ID = C.MOVIE_ID AND B.CATEGORY_ID = C.CATEGORY_ID;

@@ -1,0 +1,1 @@
+The files in this folder describe how the data was cleansed. You really do not need to run these scripts, since the required files (for database load) is already given in the Awards_DB folder (read the Readme File of Awards_DB folder). 
