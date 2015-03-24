@@ -5,19 +5,21 @@ date: "March 24, 2015"
 output: html_document
 ---
 
-#Data Visualization for the IS607 Project No. 2 | CUNY MSDA 
+Data Visualization for the IS607 Project No. 2 | CUNY MSDA 
 
 
 
-### Visualization Set 1: Dataset Description
+##Visualization Set 1: Dataset Description
 
-# Figure 1
-# Answers question "Each year's best picture winner was also nominated in: Editing Category X% of the time,
-# Cinematography Y% of the time, Best Score Z% of the time... visualized as a bar chart in decending order
-
-
-
-### Visualization Set 2: Baysian Analysis 
+#Figure 1
+Answers question "Each year's best picture winner was also nominated in: Editing Category X% of the time,
+Cinematography Y% of the time, Best Score Z% of the time... visualized as a bar chart in decending order
 
 
-### Visualization Set 3: Modeling Results
+
+
+
+##Visualization Set 2: Baysian Analysis 
+
+
+##Visualization Set 3: Modeling Results
