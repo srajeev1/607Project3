@@ -69,11 +69,13 @@ names(awards_re_modified) <- c("movie_id", "year",  "c1",  "c2",  "c3",  "c4",  
 #If a category contains 0 then the movie is nominated, but did not win
 #If a category contains 1 then the movie is nominated and also won the award in that category.
 
-
+#Displaying the dimensions of the awards_re_modified data frame.
 dim(awards_re_modified)
 
+
+#The prop.table() function can be used to get the proportions. See examples below
 prop.table(table(awards_re_modified[,c("c12","c16")],useNA=c("no")))
 prop.table(table(awards_re_modified[,c("c1","c16")],useNA=c("no")))
 
+#displaying head of data frame.
 head(awards_re_modified,150)
-
