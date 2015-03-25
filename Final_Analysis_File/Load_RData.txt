@@ -1,0 +1,18 @@
+Thanks for the tip James. 
+
+A few people (including myself) were having issues loading Sekhar's file. He posted the file on the discussion boards so I loaded the file into R and saved it as .Rdata file.
+
+
+
+data.awards <- read.csv(file="Awards_File.csv", header=T)
+save(data.awards, file="Awards.Data.RData")
+
+load("Awards.Data.RData")
+
+View(data.awards)
+
+
+
+Hope that helps
+
+Vuthy
