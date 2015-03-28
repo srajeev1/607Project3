@@ -1,6 +1,6 @@
 ---
 title: "Data Visualization"
-author: "J. Hamski, H. Berk"
+author: "Honey, Vuthy, James, Sonya"
 date: "March 24, 2015"
 output: html_document
 ---
@@ -22,9 +22,12 @@ library(dplyr)
 BP <- filter(data.awards, category_name == "BEST PICTURE", won == 1)
 
 # Create BP.AlsoNom, a dataframe showing what other categories the Best Picture Winners were NOMINATED for
-BP.AlsoNom <- left_join(BP, data.awards, by = "movie_name")
+BP.AlsoNom <- left_join(BP, data.awards, by = "movie_name") #probably should use piping here...
 BP.AlsoNom.cat <- filter(BP.AlsoNom, category_name.y != "BEST PICTURE") 
 BP.AlsoNom.cat <- select(BP.AlsoNom.cat, category_name.y) 
+BP.AlsoNom.cat <- count(BP.AlsoNom.cat, category_name.y)
+BP.AlsoNom.cat <- arrange(BP.AlsoNom.cat, desc(n))
+
 
 # Create BP.AlsoWon, a dataframe showing what other categories the Best Picture winners WON
 data.awards.won <- filter(data.awards, won == 1)
@@ -34,21 +37,22 @@ BP.AlsoWon <- distinct(BP.AlsoWon)
 
 
 ## Exploratory Data Analysis
-```{r}
+```{r, warning=FALSE, error=FALSE}
 library(ggplot2)
+library(knitr)
 ```
 
 #Table 1 - Categories Also Nominated for Best Picture Winners
 
 ```{r}
-summary(BP.AlsoNom.cat)
+kable(BP.AlsoNom.cat)
 ```
 
 #Figure 1
 Answers question "Each year's best picture winner was also nominated in: Editing Category X% of the time,
 Cinematography Y% of the time, Best Score Z% of the time... visualized as a bar chart in decending order
 ```{r}
-#this needs some work 1. arrange from highest to lowest, somehow resolve names?
-ggplot(data = BP.AlsoNom.cat, aes(x = category_name.y)) + geom_histogram(binwidth = 1) 
+#I can't seem to get this to display in decreasing order
+ggplot(data = BP.AlsoNom.cat, aes(x = category_name.y, y=n, order = desc(n))) + geom_bar(stat="identity") + coord_flip()
 
 ```
