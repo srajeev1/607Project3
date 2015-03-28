@@ -1,0 +1,54 @@
+---
+title: "Data Visualization"
+author: "J. Hamski, H. Berk"
+date: "March 24, 2015"
+output: html_document
+---
+
+Data Visualization for the IS607 Project No. 2 | CUNY MSDA 
+
+Load data
+```{r}
+load("Awards.Data.RData")
+
+#View(data.awards)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyr)
+library(dplyr)
+
+# Create BP.won, a dataframe showing only Best Picture Winners
+BP <- filter(data.awards, category_name == "BEST PICTURE", won == 1)
+
+# Create BP.AlsoNom, a dataframe showing what other categories the Best Picture Winners were NOMINATED for
+BP.AlsoNom <- left_join(BP, data.awards, by = "movie_name")
+BP.AlsoNom.cat <- filter(BP.AlsoNom, category_name.y != "BEST PICTURE") 
+BP.AlsoNom.cat <- select(BP.AlsoNom.cat, category_name.y) 
+
+# Create BP.AlsoWon, a dataframe showing what other categories the Best Picture winners WON
+data.awards.won <- filter(data.awards, won == 1)
+BP.AlsoWon <- left_join(BP, data.awards.won, by = "movie_name")
+BP.AlsoWon <- distinct(BP.AlsoWon)
+```
+
+
+## Exploratory Data Analysis
+```{r}
+library(ggplot2)
+```
+
+#Table 1 - Categories Also Nominated for Best Picture Winners
+
+```{r}
+summary(BP.AlsoNom.cat)
+```
+
+#Figure 1
+Answers question "Each year's best picture winner was also nominated in: Editing Category X% of the time,
+Cinematography Y% of the time, Best Score Z% of the time... visualized as a bar chart in decending order
+```{r}
+#this needs some work 1. arrange from highest to lowest, somehow resolve names?
+ggplot(data = BP.AlsoNom.cat, aes(x = category_name.y)) + geom_histogram(binwidth = 1) 
+
+```
