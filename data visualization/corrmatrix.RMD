@@ -5,7 +5,7 @@ date: "Saturday, March 28, 2015"
 output: html_document
 ---
 
-**Use Sekhar's method to create awards and category matrices**
+**Use Sekhar's method to create award and category matrices**
 ```{r, echo=FALSE}
 library(dplyr)
 library(tidyr)
@@ -50,4 +50,11 @@ corrplot(W, method = "number")
 ***Correlation matrix, display ellipses***
 ```{r, echo=TRUE}
 corrplot(W, method = "ellipse")
+```
+
+***Correlation matrix, using ggplot2
+```{r, echo=TRUE}
+library(ggplot2)
+library(reshape2)
+qplot(x=Var1, y=Var2, data=melt(cor(awards_mod[3:25])), fill=value, geom="tile")
 ```
