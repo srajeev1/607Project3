@@ -52,6 +52,11 @@ corrplot(W, method = "number")
 corrplot(W, method = "ellipse")
 ```
 
+***Correlation matrix, display squares***
+```{r, echo=TRUE}
+corrplot(W, method = "square")
+```
+
 ***Correlation matrix, using ggplot2
 ```{r, echo=TRUE}
 library(ggplot2)
