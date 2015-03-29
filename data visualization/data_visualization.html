@@ -79,6 +79,8 @@ library(ggplot2)
 library(knitr)
 #library(grid)
 library(gridExtra)</code></pre>
+<div id="table.1-number-of-times-a-best-picture-winner-was-nominated-or-won-another-category." class="section level2">
+<h2>Table.1 Number of times a Best Picture winner was nominated or won another category.</h2>
 <pre class="r"><code># Create BP, a dataframe showing only Best Picture Winners
 BP &lt;- filter(data.awards, category_name == &quot;BEST PICTURE&quot;, won == 1)
 
@@ -98,7 +100,8 @@ BP.AlsoWon &lt;- select(BP.AlsoWon, category_name.y)
 BP.AlsoWon &lt;- count(BP.AlsoWon, category_name.y)
 BP.AlsoWon &lt;- arrange(BP.AlsoWon, desc(n))
 
-kable(cbind(BP.AlsoNom, BP.AlsoWon), col.names = c(&quot;Category Nominations&quot;, &quot;Count&quot;, &quot;Category Winners&quot;, &quot;Count&quot;))</code></pre>
+kable(cbind(BP.AlsoNom, BP.AlsoWon), 
+      col.names = c(&quot;Category Nominations&quot;, &quot;Count&quot;, &quot;Category Winners&quot;, &quot;Count&quot;))</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -207,9 +210,9 @@ kable(cbind(BP.AlsoNom, BP.AlsoWon), col.names = c(&quot;Category Nominations&qu
 </tr>
 </tbody>
 </table>
-<div id="figure-1" class="section level1">
-<h1>Figure 1</h1>
-<p>Answers question “Each year’s best picture winner was also nominated in: Editing Category X% of the time, Cinematography Y% of the time, Best Score Z% of the time… visualized as a bar chart in decending order</p>
+</div>
+<div id="figure-1.-barchart-showing-the-number-of-times-a-best-picture-winner-was-nominated-or-won-another-category." class="section level2">
+<h2>Figure 1. Barchart showing the number of times a Best Picture winner was nominated or won another category.</h2>
 <pre class="r"><code>nom &lt;- ggplot(data = BP.AlsoNom, aes(x = reorder(category_name.y, n), y=n)) + geom_bar(stat=&quot;identity&quot;) + coord_flip() + labs(x = &quot;Category&quot;, y = &quot;Nominations&quot;)
 
 win &lt;- ggplot(data = BP.AlsoWon, aes(x = reorder(category_name.y, n), y=n)) + geom_bar(stat=&quot;identity&quot;) + coord_flip() + labs(x = &quot;Category&quot;, y = &quot;Wins&quot;) + ylim(0, 80)

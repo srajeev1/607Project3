@@ -23,7 +23,7 @@ library(knitr)
 library(gridExtra)
 ```
 
-
+## Table.1 Number of times a Best Picture winner was nominated or won another category. 
 ```{r, warning=FALSE, message=FALSE}
 # Create BP, a dataframe showing only Best Picture Winners
 BP <- filter(data.awards, category_name == "BEST PICTURE", won == 1)
@@ -48,9 +48,7 @@ kable(cbind(BP.AlsoNom, BP.AlsoWon),
       col.names = c("Category Nominations", "Count", "Category Winners", "Count"))
 ```
 
-#Figure 1
-Answers question "Each year's best picture winner was also nominated in: Editing Category X% of the time,
-Cinematography Y% of the time, Best Score Z% of the time... visualized as a bar chart in decending order
+##Figure 1. Barchart showing the number of times a Best Picture winner was nominated or won another category. 
 ```{r}
 nom <- ggplot(data = BP.AlsoNom, aes(x = reorder(category_name.y, n), y=n)) + geom_bar(stat="identity") + coord_flip() + labs(x = "Category", y = "Nominations")
 
@@ -58,4 +56,3 @@ win <- ggplot(data = BP.AlsoWon, aes(x = reorder(category_name.y, n), y=n)) + ge
 
 grid.arrange(nom, win, ncol=1)
 ```
-
