@@ -42,14 +42,14 @@ W <- cor(awards_mod[3:25]) #correlate c1:c23
 corrplot(W, method = "circle")
 ```
 
-***Correlation matrix, display numbers***
+***Correlation matrix, display nunbers***
 ```{r, echo=TRUE}
 corrplot(W, method = "number")
 ```
 
-***Correlation matrix, display squares***
+***Correlation matrix, display ellipses***
 ```{r, echo=TRUE}
-corrplot(W, method = "square")
+corrplot(W, method = "ellipse")
 ```
 
 ***Correlation matrix, using ggplot2
@@ -57,11 +57,4 @@ corrplot(W, method = "square")
 library(ggplot2)
 library(reshape2)
 qplot(x=Var1, y=Var2, data=melt(cor(awards_mod[3:25])), fill=value, geom="tile")
-```
-
-***Correlatio matrix, numerical results
-```{r, echo=TRUE}
-x <- awards_mod[3:25]
-y <- awards_mod[3:25]
-cor(x, y)
 ```
