@@ -1,0 +1,171 @@
+---
+title: "Data Cleanup"
+author: "Vuthy (From Sekhar's Code)"
+date: "Sunday, March 29, 2015"
+output: html_document
+---
+```{r echo=FALSE, results='hide', message=FALSE}
+require("RCurl")
+url <- "https://raw.githubusercontent.com/srajeev1/607Project3/master/Awards_DB/Detailed_Analysis_Read_if_interested/academy_awards.csv"
+myData <- getURL(url, ssl.verifypeer=FALSE)
+academy_awards_df <- read.csv(textConnection(myData), header=TRUE,stringsAsFactors=F)
+str(academy_awards_df)
+````
+#### Data Issues:
+1. Additional Variables 
+2. Unwated characters in data
+3. Movie Names and nominees were interchanged for the following categories
+
+* Actor -- Leading Role
+* Actress -- Leading Role 
+* Actor -- Supporting Role
+* Actress -- Supporting Role
+
+4. Obsolete Categories
+
+````{r}
+#Delete Additional Variables
+academy_awards_df$X <-NULL
+academy_awards_df$X.1 <-NULL
+academy_awards_df$X.2 <-NULL
+academy_awards_df$X.3 <-NULL
+academy_awards_df$X.4 <-NULL
+academy_awards_df$X.5 <-NULL
+
+````
+
+```{r message=FALSE}
+library(dplyr)
+library(tidyr)
+```
+
+
+Remove the text between () in Year column
+```{r}
+#Seperate the year column into two sections
+academy_awards_df <- academy_awards_df %>%
+  separate(Year,into=c("Year","Junk"), sep="\\(")
+
+#Delete the section (obsolete) sections
+academy_awards_df$Junk <- NULL
+
+#Seperate the year column into two sections
+academy_awards_df <- academy_awards_df %>%
+  separate(Year,into=c("Year","Junk"), sep="\\ ")
+
+#Delete the section (obsolete) sections
+academy_awards_df$Junk <- NULL
+```
+
+
+Extract the correct year part from Years, which are separated by a "/".
+Older records contained data in the following format: 1927/28 (1st)
+```{r}
+#If the length of 'Years' equal 7, take only the last two characters and add '19' to the front of it.
+academy_awards_df$Year <- ifelse(nchar(academy_awards_df$Year) == 7,paste("19",substr(academy_awards_df$Year,6,7),sep=""),academy_awards_df$Year)
+
+```
+
+```{r}
+#Removing the text between "{}" from Additional.Info variable
+academy_awards_df$Additional.Info <- as.vector(substring(academy_awards_df$Additional.Info,1,
+        ifelse(regexpr("\\{",academy_awards_df$Additional.Info) == -1, nchar(academy_awards_df$Additional.Info),
+               (regexpr("\\{",academy_awards_df$Additional.Info) - 1))
+)
+)
+```
+
+```{r}
+#Finding the movie name from Nominee and Additional.Info variables, since for some award categories the information was interchanged
+academy_awards_df$Movie <- ifelse((
+  academy_awards_df$Category == "Actor -- Leading Role" | 
+  academy_awards_df$Category == "Actor -- Supporting Role" | 
+  academy_awards_df$Category == "Actress -- Leading Role" | 
+  academy_awards_df$Category == "Actress -- Supporting Role"), 
+                                  academy_awards_df$Additional.Info, academy_awards_df$Nominee
+)
+
+#Now that we have obtained the Movie name, delete the unnecessary variables
+academy_awards_df$Additional.Info <- NULL
+academy_awards_df$Nominee <- NULL
+```
+
+
+```{r}
+#Changing the Won. variable to Won, and replacing the YES with 1 and NO with 0
+academy_awards_df$Won <- ifelse(academy_awards_df$Won. == "NO", 0, 1)
+academy_awards_df$Won. <- NULL
+```
+
+
+```{r}
+#Delete the records belonging to the following award categories, since these awards are not associated to any movie or archaic:
+
+#Honorary Award
+#Irving G. Thalberg Memorial Award
+#Scientific and Technical (Scientific and Engineering Award)
+#Scientific and Technical (Technical Achievement Award)
+#Scientific and Technical (Bonner Medal)
+#Jean Hersholt Humanitarian Award
+#Scientific and Technical (Special Awards)
+#Scientific and Technical (Academy Award of Merit)
+#Scientific and Technical (Gordon E. Sawyer Award)
+#Acting (other)
+
+#Engineering Effects (archaic category)
+#Unique and Artistic Picture (archaic category)
+#Special Effects (archaic category)
+#Dance Direction (archaic category)
+#Assistant Director (archaic category)
+#Foreign Language Film
+
+academy_awards_df <- academy_awards_df[ -which((
+  academy_awards_df$Category == "Irving G. Thalberg Memorial Award" | 
+  academy_awards_df$Category == "Scientific and Technical (Scientific and Engineering Award)" | 
+  academy_awards_df$Category == "Scientific and Technical (Technical Achievement Award)" |    
+  academy_awards_df$Category == "Scientific and Technical (Bonner Medal)" |
+  academy_awards_df$Category == "Honorary Award" |
+  academy_awards_df$Category == "Jean Hersholt Humanitarian Award" |
+  academy_awards_df$Category == "Scientific and Technical (Special Awards)" |
+  academy_awards_df$Category == "Scientific and Technical (Academy Award of Merit)" |
+  academy_awards_df$Category == "Scientific and Technical (Gordon E. Sawyer Award)" |
+  academy_awards_df$Category == "Special Achievement Award" |
+  academy_awards_df$Category == "Acting (other)" |
+  academy_awards_df$Category == "Engineering Effects (archaic category)" |
+  academy_awards_df$Category == "Unique and Artistic Picture (archaic category)" |
+  academy_awards_df$Category == "Special Effects (archaic category)" |
+  academy_awards_df$Category == "Dance Direction (archaic category)" |
+  academy_awards_df$Category == "Assistant Director (archaic category)" |
+  academy_awards_df$Category == "Foreign Language Film"                                          
+)),]
+
+```
+
+```{r}
+#Create Trim functions
+trim.leading <- function (x)  sub("^\\s+", "", x)
+trim.trailing <- function (x) sub("\\s+$", "", x)
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+```
+
+Generate CSV files for loading into the RDBMS Tables:
+
+Creating the file for Category table:
+```{r}
+academy_awards_df$Category <- trim(academy_awards_df$Category)
+academy_awards_df$Category <- toupper(academy_awards_df$Category)
+
+write.table(data.frame(unique(academy_awards_df$Category)),file="Category.csv",row.names=FALSE,col.names=FALSE,sep=",",quote=FALSE)
+```
+
+Creating the file for Movie table:
+```{r}
+academy_awards_df$Movie <- trim(academy_awards_df$Movie)
+academy_awards_df$Movie <- toupper(academy_awards_df$Movie)
+
+write.table(unique(data.frame(academy_awards_df$Movie,academy_awards_df$Year)) ,file="Movie.csv",row.names=FALSE,col.names=FALSE,sep=",",quote=TRUE)
+
+write.table(academy_awards_df ,file="Academy_Awards_Temp.csv",row.names=FALSE,col.names=FALSE,sep=",",quote=TRUE)
+````
+
+After the data files are generated, it was loaded into a database and a select query was issued to generate the data the final data file.
