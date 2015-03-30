@@ -23,7 +23,7 @@ library(knitr)
 library(gridExtra)
 ```
 
-## Table.1 Number of times a Best Picture winner was nominated or won another category. 
+## Table 1. Number of times a Best Picture winner was nominated or won another category. 
 ```{r, warning=FALSE, message=FALSE}
 # Create BP, a dataframe showing only Best Picture Winners
 BP <- filter(data.awards, category_name == "BEST PICTURE", won == 1)
@@ -56,3 +56,74 @@ win <- ggplot(data = BP.AlsoWon, aes(x = reorder(category_name.y, n), y=n)) + ge
 
 grid.arrange(nom, win, ncol=1)
 ```
+
+## Correlation Matrices
+
+Use Sekhar's method to create award and category matrices
+```{r, echo=TRUE}
+library(dplyr)
+library(tidyr)
+
+awards_df <- read.csv("Awards_File.csv",stringsAsFactors=F)
+awards_modified <- awards_df[,c(1,3,4,6)]
+head(awards_modified)
+awards_modified <- awards_modified %>%
+  group_by(movie_id,year,category_id) %>%
+  summarise(won=max(won))
+awards_re_modified <- spread((awards_modified),category_id,won)
+head(awards_re_modified)
+award_categories <- unique(data.frame(category_id=awards_df$category_id,category_name=awards_df$category_name))
+rownames(award_categories) <- NULL
+names(awards_re_modified) <- c("movie_id", "year",  "c1",  "c2",  "c3",  "c4",  "c5", "c6",  "c7",  "c8",  "c9", "c10", "c11", "c12", "c13", "c14", "c15","c16", "c17", "c18", "c19", "c20", "c21", "c22", "c23")
+```
+
+Modify awards matrix to set NA = 0
+```{r, echo = TRUE}
+####
+names(awards_re_modified) <- c("movie_id", "year","ACTOR -- LEADING ROLE","ACTOR -- SUPPORTING ROLE","ACTRESS
+LEADING ROLE","ACTRESS SUPPORTING ROLE","ANIMATED FEATURE FILM","ART DIRECTION","CINEMATOGRAPHY","COSTUME
+DESIGN","DIRECTING","DOCUMENTARY FEATURE","DOCUMENTARY SHORT SUBJECT","FILM EDITING","MAKEUP","MUSIC
+SCORING","MUSIC SONG","BEST PICTURE","SHORT FILM ANIMATED","SHORT FILM LIVE ACTION","SOUND","SOUND
+EDITING","VISUAL EFFECTS","WRITING","DOCUMENTARY OTHER")
+awards_mod <- awards_re_modified #create new var to preserve original
+awards_mod[is.na(awards_mod)] <- 0 #set NA = 0
+```
+
+## Figure 2. Correlation matrix, display circles
+
+```{r, echo = TRUE}
+
+library(corrplot)
+W <- cor(awards_mod[3:25]) #correlate c1:c23
+corrplot(W, method = "circle", tl.cex = 0.5)
+```
+
+## Figure 3. Correlation matrix, display ellipses
+```{r, echo=TRUE}
+corrplot(W, method = "ellipse", tl.cex = 0.5)
+```
+
+## Figure 4. Correlation matrix, display squares
+```{r, echo=TRUE}
+corrplot(W, method = "square", tl.cex = 0.5)
+```
+
+## Figure 5. Correlation matrix, using ggplot2
+```{r, echo=TRUE}
+library(ggplot2)
+library(reshape2)
+qplot(x=Var1, y=Var2, data=melt(cor(awards_mod[3:25])), fill=value, geom="tile")
+```
+
+## Table 2. Correlation Matrix, numerical values
+```{r, echo=TRUE}
+x <- awards_mod[3:25]
+y <- awards_mod[3:25]
+cor(x, y)
+```
+
+***An analysis of the various correlation matrix visualizations and table of numerical values shows the
+primary determining factor is DIRECTING, followed by WRITING and then FILM EDITING.***
+
+Note: There was an issue with NA values; we could not get them to be ignored, so instead had to set them
+equal to 0, which may have resulted in some skewing of the results.
