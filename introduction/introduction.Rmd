@@ -10,7 +10,7 @@ output: html_document
 This project is to answer the question: “In the Academy Awards, is Best Film Editing the best predictor of Best Picture?”
 All students of IS607 course have participated on this project from Mar 14th to Mar 29th.
 
-![alt text](screen.PNG)
+![alt text](/Users/seoungyoonlim/Documents/cuny/IS607/project3/screen.png)
 
 ####2. Desired Outcomes
 There is reasonable correlation between Best Picture and Best Film Editing. 
@@ -56,7 +56,7 @@ This is not to show causality between Best Picture and Best Film Editing (or som
 
 ####5. Possible benefit 
 Even with the constraint above, there would be a possibility of causality between the two awards(Best Picture and some other one). After we find any correlation, we can recommend movie producers to invest more on one category, for example, sound editing, in order to get Best Picture award.
-![alt text](best.jpg)
+![alt text](/Users/seoungyoonlim/Documents/cuny/IS607/project3/best.jpg)
 
 ####6. Risk
 Since many members are working through online, there might exist problems of time, data management and communication.
