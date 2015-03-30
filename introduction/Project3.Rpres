@@ -1,0 +1,44 @@
+Project3 
+========================================================
+author: IS607
+date: Mar 3 2015
+
+1. Executive Summary
+========================================================
+
+
+* Assignment
+
+This project is to answer the question: “In the Academy Awards, is Best Film Editing the best predictor of Best Picture?”
+
+* Desired Outcomes 
+
+There is reasonable correlation between Best Picture and Best Film Editing. 
+Or,
+ There is reasonable correlation between Best Picture and other category awards.
+
+
+2. Assumptions and Constraint
+========================================================
+
+
+* Assumptions
+
+Any combinations of each category (writing, film editing…) do not affect the Best Picture award.
+
+* Constraint
+
+This is not to show causality between Best Picture and Best Film Editing. Even if there would be correlation between two, strictly, we cannot tell that nice film editing makes the movie Best Picture awarded
+
+3. Management Strategy
+========================================================
+
+
+* Risk
+Since many members are working through online, there might exist problems of time, data management and communication.
+
+* Management Strategy
+To reduce the risk above, we used diverse tools
+Distributing works, Managing schedule: Trello 
+Verifying data quality, Removing duplicates Github, PostgreSQL: 
+Communication: Trello and regular meeting online.
