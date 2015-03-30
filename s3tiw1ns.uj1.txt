@@ -1,0 +1,23 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+	new file:   summary/IS607 Project 3 Summary/.Rhistory
+	new file:   summary/IS607 Project 3 Summary/best.jpg
+#
+# Untracked files:
+	summary/IS607 Project 3 Summary/Summary-rpubs.html
+	summary/IS607 Project 3 Summary/Summary.Rpres
+	summary/IS607 Project 3 Summary/Summary.md
+	summary/IS607 Project 3 Summary/View_Analysis_1.PNG
+	summary/IS607 Project 3 Summary/View_Analysis_2.png
+	summary/IS607 Project 3 Summary/View_Analysis_3.png
+	summary/IS607 Project 3 Summary/View_Analysis_4.PNG
+	summary/IS607 Project 3 Summary/View_Analysis_5.PNG
+	summary/IS607 Project 3 Summary/bestdir.jpg
+	summary/IS607 Project 3 Summary/the-oscar-statue.jpg
+
+
