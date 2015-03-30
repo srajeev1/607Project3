@@ -112,7 +112,8 @@ corrplot(W, method = "square", tl.cex = 0.5)
 ```{r, echo=TRUE}
 library(ggplot2)
 library(reshape2)
-qplot(x=Var1, y=Var2, data=melt(cor(awards_mod[3:25])), fill=value, geom="tile")
+cm <- qplot(x=Var1, y=Var2, data=melt(cor(awards_mod[3:25])), fill=value, geom="tile")
+cm + theme(axis.text=element_text(size=8))
 ```
 
 ## Table 2. Correlation Matrix, numerical values
