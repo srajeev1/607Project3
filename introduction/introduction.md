@@ -16,37 +16,38 @@ All students of IS607 course have participated on this project from Mar 14th to 
 There is reasonable correlation between Best Picture and Best Film Editing. 
 Or,
  There is reasonable correlation between Best Picture and other category awards. The current categories of Academy award are below.
-```{r, echo=FALSE,results = 'hide', warning=FALSE, message=FALSE}
-library(xtable) 
-category <- "Best Picture: since 1928
-Best Directing: since 1928
-Best Actor in a Leading Role: since 1928
-Best Actor in a Supporting Role: since 1936
-Best Actress in a Leading Role: since 1928
-Best Actress in a Supporting Role: since 1936
-Best Animated Feature: since 2001
-Best Animated Short Film: since 1931
-Best Cinematography: since 1928
-Best Costume Design: since 1948
-Best Documentary Feature: since 1943
-Best Documentary Short Subject: since 1941
-Best Film Editing: since 1934
-Best Foreign Language Film: since 1947
-Best Live Action Short Film: since 1931
-Best Makeup and Hairstyling: since 1981
-Best Original Score: since 1934
-Best Original Song: since 1934
-Best Production Design: since 1928
-Best Sound Editing: since 1963
-Best Sound Mixing: since 1930
-Best Visual Effects: since 1939
-Best Adapted Screenplay: since 1928
-Best Original Screenplay: since 1940"
-Current_category <- strsplit(category, split="\n")
-```
-```{r}
+
+
+```r
 Current_category[[1]]
-``` 
+```
+
+```
+##  [1] "Best Picture: since 1928"                     
+##  [2] "Best Directing: since 1928"                   
+##  [3] "Best Actor in a Leading Role: since 1928"     
+##  [4] "Best Actor in a Supporting Role: since 1936"  
+##  [5] "Best Actress in a Leading Role: since 1928"   
+##  [6] "Best Actress in a Supporting Role: since 1936"
+##  [7] "Best Animated Feature: since 2001"            
+##  [8] "Best Animated Short Film: since 1931"         
+##  [9] "Best Cinematography: since 1928"              
+## [10] "Best Costume Design: since 1948"              
+## [11] "Best Documentary Feature: since 1943"         
+## [12] "Best Documentary Short Subject: since 1941"   
+## [13] "Best Film Editing: since 1934"                
+## [14] "Best Foreign Language Film: since 1947"       
+## [15] "Best Live Action Short Film: since 1931"      
+## [16] "Best Makeup and Hairstyling: since 1981"      
+## [17] "Best Original Score: since 1934"              
+## [18] "Best Original Song: since 1934"               
+## [19] "Best Production Design: since 1928"           
+## [20] "Best Sound Editing: since 1963"               
+## [21] "Best Sound Mixing: since 1930"                
+## [22] "Best Visual Effects: since 1939"              
+## [23] "Best Adapted Screenplay: since 1928"          
+## [24] "Best Original Screenplay: since 1940"
+```
 
 ####3. Assumptions
 Any combinations of categories (sound mixing and film editing) do not affect the Best Picture award.

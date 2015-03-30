@@ -1,0 +1,11 @@
+base
+XML
+data.table
+DBI
+RPostgreSQL
+rjson
+bitops
+RCurl
+devtools
+slidify
+xtable
