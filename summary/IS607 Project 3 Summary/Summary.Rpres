@@ -95,7 +95,7 @@ __Distribution of Nominations By Category__
 
 ![View](NominationByCategory.PNG)
 
-[Click here for Visualizations Rpubs](http://rpubs.com/simonnyc/70716)
+[Click here for Visualizations Rpubs](http://rpubs.com/HoneyBerk/proj3datavis)
 
 
 Visualizations
@@ -105,7 +105,7 @@ __Distribution of Winning By Category__
 
 ![View](WinningCategory.PNG)
 
-[Click here for Visualizations Rpubs](http://rpubs.com/simonnyc/70716)
+[Click here for Visualizations Rpubs](http://rpubs.com/HoneyBerk/proj3datavis)
 
 Visualizations
 ========================================================
@@ -114,7 +114,19 @@ __Distribution of Wins over Winning by Nominations Category__
 
 ![View](WinsOverWinningByNominations.PNG)
 
-[Click here for Visualizations Rpubs](http://rpubs.com/simonnyc/70716)
+[Click here for Visualizations Rpubs](http://rpubs.com/HoneyBerk/proj3datavis)
+
+
+
+Visualizations
+========================================================
+
+__Correlation Matrix__
+
+![View](CoorelationMatrix.PNG)
+
+[Click here for Visualizations Rpubs](http://rpubs.com/HoneyBerk/proj3datavis)
+
 
 
 Conclusion
@@ -141,6 +153,7 @@ https://rpubs.com/senthiltamil/Project3
 http://rpubs.com/msekhar12/68495
 http://rpubs.com/jetherton/70678
 http://rpubs.com/simonnyc/70716
+http://rpubs.com/HoneyBerk/proj3datavis
 http://rpubs.com/dn11/70696
 http://rpubs.com/jhamski/Project3_EDAvis
 
