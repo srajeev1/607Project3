@@ -1,6 +1,6 @@
 ---
 title: "Data Visualization"
-author: "Honey, Vuthy, James, Sonya"
+author: "Honey, Vuthy, James, Sonya, Mohamed"
 date: "March 24, 2015"
 output: html_document
 ---
@@ -128,3 +128,72 @@ primary determining factor is DIRECTING, followed by WRITING and then FILM EDITI
 
 Note: There was an issue with NA values; we could not get them to be ignored, so instead had to set them
 equal to 0, which may have resulted in some skewing of the results.
+
+```{r}
+require(ggplot2)
+library(ggplot2)
+library(plot3D)
+library(scatterplot3d)
+
+```
+
+ I took the summary table that Honey, Vuthy, James, and Sonya had created and added few graphics as well
+
+ Please note that i only took the summary with the below following columns:
+Category.Nominations,
+Count,
+Category.Winners,
+Count
+
+ Also, I loaded and shared the table as csv using dropconvas website as per below 
+
+```{r}
+
+data1<- read.table(file= "http://dropcanvas.com/dcm0h/1", header = TRUE, sep=",")
+str(data1)
+head(data1)
+
+
+```
+
+
+# Distribution Nominations By Category
+
+```{r, echo=FALSE}
+
+p<- qplot(Category.Nominations, Count,  data= data1, color =Category.Nominations,  size=I(5),
+           main = " Distribution Nominations By Category",
+           xlab = " Category Nominations ", 
+           ylab = " Nomination Count " )   
+
+p + theme_bw()
+p
+
+
+```
+
+# Distribution of Winning By Category
+
+```{r, echo=FALSE}
+
+
+p<- qplot(Category.Winners, Count.1,  data= data1, color =Category.Winners,  size=I(5),
+          main = " Distribution of Winning By Category ",
+          xlab = " Winning Category ", 
+          ylab = " Winning Count " )   
+
+p + theme_bw()
+p
+
+```
+
+# Distribution of Wins over Winning by Nominations Category
+
+```{r}
+attach(data1) 
+scatterplot3d(Category.Nominations, Category.Winners, Count.1, pch=16, highlight.3d=TRUE,
+               type="h", main="Distribution of Wins over Winning by Nominations Category",
+               xlab = "Category.Nominations", ylab = "Winning Category", zlab = " Winners")
+
+```
+
